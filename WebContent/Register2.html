@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<body>
+	<h1>Phone Book</h1>
+
+	<h3>Login</h3>
+	<hr>
+	<form id="login">
+		User name:<br> <input type="text" name="firstname" id="name">
+		<br> <br> Password:<br> <input type="password"
+			name="password" id="pass"> <br> <br>
+
+		<button id="btnlogin" onclick="loadDoc2()">Login</button>
+		<button id="btnshow" onclick="load()">Show Phone Book</button>
+		<button id="btnregister">register</button>
+	</form>
+	<script>
+	function loadDoc() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				//document.getElementById("demo").innerHTML = this.responseText;
+				//window.location = ('http://localhost:8088/ProjectFinal/Login.html');
+			}
+			//else alert("oOps");
+		};
+		xhttp.open("GET",
+				"http://localhost:8088/ProjectFinal/prj/users/va", true);
+		xhttp.send();
+	}
+	function load() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				//document.getElementById("demo").innerHTML = this.responseText;
+				//window.location = ('http://localhost:8088/ProjectFinal/Login.html');
+			}
+			//else alert("oOps");
+		};
+		xhttp.open("POST",
+				"http://localhost:8088/ProjectFinal/prj/users/validate", true);
+		xmlhttp.setRequestHeader("Content-Type","application/json");
+		xhttp.send(JSON.stringify({
+			"username" : "z.vahidi",
+			"password" : "12346"			}));
+	}
+
+		function loadDoc2() {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementById("demo").innerHTML = this.responseText;
+					//window.location = ('http://localhost:8088/ProjectFinal/Login.html');
+				}
+				//else alert("oOps");
+			};
+			xhttp.open("GET",
+					"http://localhost:8088/ProjectFinal/prj/users/bb", true);
+			xhttp.send();
+		}
+
+		function formToJSON() {
+			return JSON.stringify({
+				"username" : document.getElementById("name").value,
+				"password" : document.getElementById("pass").value
+			});
+		}
+		document.getElementById("demo").innerHTML = formToJSON();
+	</script>
+</body>
+</html>
