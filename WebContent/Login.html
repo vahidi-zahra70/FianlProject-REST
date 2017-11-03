@@ -3,18 +3,27 @@
 <head>
 <body>
 	<h2>Welcome To Online Phone Book</h2>
-	<h3>Login</h3>
-	<hr>
-	<form id="login">
+
+	<form id="login" method="POST">
+
+		Server URL:<br> <input type="text" name="URL" id="URL" required>
+		<h3>Login</h3>
+		<hr>
 		User name:<br> <input type="text" name="name" id="name" required>
-		<br> <br> Password:<br> <input type="password" name="password" id="pass" required> <br> <br>
-		<input type="submit" id="btnlogin" value="Login" >
+		<br> <br> Password:<br> <input type="password"
+			name="password" id="pass" required> <br> <br>
+			<p  id="unvalidUser"></p>
+			 <input	type="submit" id="btnlogin" value="Login"
+			style="height: 25px; width: 120px">
+			
 	</form>
 	<h3>Register or See Online Phone Book</h3>
 	<hr>
-	<button id="btnshow">Show Phone Book</button>
-	<button   onclick="location.href='Register.html';">register</button>
-	<script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<button id="btnshow" style="height: 25px">Show Phone Book</button>
+	<button onclick="location.href='Register.html';"
+		style="height: 25px; width: 120px">register</button>
+	<script
+		src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script src="js/guest.js"></script>
 </body>
 </html>

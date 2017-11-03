@@ -98,7 +98,8 @@ public class Client {
 
 			HttpResponse response = httpClient.execute(postRequest);
 
-			if (response.getStatusLine().getStatusCode() != 200) {
+			if (response.getStatusLine().getStatusCode() != 200
+					|| response.getStatusLine().getStatusCode() != 401) {
 				throw new RuntimeException("Failed : HTTP error code : "
 						+ response.getStatusLine().getStatusCode());
 			}

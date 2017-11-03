@@ -21,6 +21,8 @@
 		<mapping class="JavaClass.User" />
 		<mapping class="JavaClass.Contact" />
 		<mapping class="JavaClass.Event" />
+		<mapping class="JavaClass.Role" />
+		<mapping class="JavaClass.Feature" />
 
 	</session-factory>
 

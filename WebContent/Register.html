@@ -4,7 +4,7 @@
 <body>
 	<h2>Register</h2>
 	<hr>
-	<form id="register">
+	<form id="register" method="POST">
 	User name:
 	<br>
 	<input type="text" name="nameRegister" id="nameRegister" required>
@@ -19,8 +19,8 @@
 	<input type="password" name="password2" id="pass2" required>
 	<br>
 	<br>
-
-	<input type="submit" id="btnregister"  value="Accept">
+	<p  id="duplicateUser"></p>
+	<input type="submit"   value="Accept">
 	</form>
 	<script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script src="js/guest.js"></script>

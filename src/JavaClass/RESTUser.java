@@ -51,19 +51,27 @@ public class RESTUser{
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response validateUser(User t,@Context HttpServletRequest request) throws SQLException {
 		String result;
+		System.out.println(t.getUsername());
+		System.out.println(t.getPassword());
 		UserManager TT=new UserManager();
 		int output=TT.validation_of_user(t);
 		if(output==-1){
 			result="not exist";
+			
 		}
 		else{
 			result="OK "+output;
 			String ip = request.getRemoteAddr();
 			userDB.put(ip, t);
+			
 		}
 		log.error(result);
+		
 		return Response.status(200).entity(result).build();
 	}
+	
+	
+	
 
 	//adding a new user
 	@Path("/adduser")  
@@ -119,6 +127,30 @@ public class RESTUser{
 		}
 		return Response.status(200).entity(result).build();	
 	}
+
+	
+	
+	///
+	//validating a user
+		@Path("/va")  
+		@GET
+		//@Consumes(MediaType.APPLICATION_JSON)
+		public Response validateUser2(@Context HttpServletRequest request) throws SQLException {
+			String result="";
+			System.out.println("pppppppppp");
+//			
+			return Response.status(200).entity(result).build();
+		}
+		
+		@Path("/bb")  
+		@GET
+		//@Consumes(MediaType.APPLICATION_JSON)
+		public Response validateUser3(String t,@Context HttpServletRequest request) throws SQLException {
+			String result="ooooooo";
+			System.out.println("yyyyyyyyy");
+//			
+			return Response.status(200).entity(result).build();
+		}
 
 }
 

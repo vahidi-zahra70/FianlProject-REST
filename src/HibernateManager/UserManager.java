@@ -19,6 +19,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import JavaClass.Event;
+import JavaClass.Role;
 import JavaClass.User;
 
 
@@ -53,7 +54,8 @@ public class UserManager {
 			tx = session.beginTransaction();
 			if(session.get(User.class, CC.getUsername())==null){
 				CC.setPassword( encrypt(CC.getPassword()));
-				CC.setRole(3);
+				Role role=session.get(Role.class,3);
+				CC.setRole(role);
 				session.save(CC); 
 				System.out.println("successfully saved"); 
 				is_exist=true;
@@ -82,7 +84,8 @@ public class UserManager {
 
 	//Validating a user
 	public int validation_of_user(User CC){
-		int role=-1;
+		int roleID=-1;
+		Role role;
 		Session session = factory.openSession();
 		Transaction tx = null;
 
@@ -92,6 +95,7 @@ public class UserManager {
 
 			if(user!=null && user.getPassword().equals(encrypt(CC.getPassword()))){
 				role=user.getRole();
+				roleID=role.getId();
 				Date date=new Date();
 				Event ee=new Event(user,"successful login", date);
 				session.save(ee);
@@ -113,7 +117,7 @@ public class UserManager {
 		}finally {
 			session.close(); 
 		}
-		return role;
+		return roleID;
 
 
 	}

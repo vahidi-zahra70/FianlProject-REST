@@ -49,12 +49,15 @@ public class RESTContact{
 		ContactManager TT=new ContactManager();
 		if(TT.insertContact(t,ip,userDB)){
 			result="Saved successfully";
+			log.error(result);
+			return Response.status(200).entity(result).build();
 		}
 		else {
 			result="You are not allowed to insert a new contact";
+			log.error(result);
+			return Response.status(401).entity(result).build();
 		}
-		log.error(result);
-		return Response.status(200).entity(result).build();
+		
 	}
 
 
@@ -65,6 +68,7 @@ public class RESTContact{
 	public  ArrayList<Contact>   showAllContacts( @Context HttpServletRequest request) throws SQLException{
 		String ip = request.getRemoteAddr();
 		ContactManager TT=new ContactManager();
+		System.out.println("ccccccccccccc");
 		return TT.showAllContacts( ip,userDB);
 	}
 
