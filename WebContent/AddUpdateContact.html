@@ -9,7 +9,7 @@
 			<th><a href="AddContact.html">Add new contact</a></th>
 		</tr>
 	</table>
-	<h2>Add a new Contact</h2>
+	<h2>Add a new Contact/ Update a Contact</h2>
 	<hr>
 	<form id="formAddContact" method="POSt">
 		Name: <br> <input type="text" name="nameContact" id="nameContact"
@@ -20,9 +20,18 @@
 		Phone: <br> <input type="number" name="cellPhone" id="cellPhone"
 			required> <br> <br>Email: <br> <input
 			type="text" name="email" id="email" required> <br>
+			<h4>If you want to edit a contact, you have to insert the contact ID too. </h4>
+			<hr>
+			Contact ID: <br> <input type="number" name="contactID" id="contactID" >
+			
+	<hr>
+			
+			
 		<p id="AddNewContact"></p>
-		<input type="submit" value="Add the contact"
-			style="height: 25px; width: 120px">
+		<input id="addContact" type="button" value="Add the contact"
+			style="height: 25px; width: 125px">
+			<input  id="editContact"type="button" value="Edit the contact"
+			style="height: 25px; width: 125px">
 			<br><br>
 	</form>
 	<script

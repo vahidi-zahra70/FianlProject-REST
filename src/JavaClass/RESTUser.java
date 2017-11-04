@@ -51,8 +51,6 @@ public class RESTUser{
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response validateUser(User t,@Context HttpServletRequest request) throws SQLException {
 		String result;
-		System.out.println(t.getUsername());
-		System.out.println(t.getPassword());
 		UserManager TT=new UserManager();
 		int output=TT.validation_of_user(t);
 		if(output==-1){

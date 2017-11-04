@@ -131,6 +131,17 @@ public class Base {
 			System.out.println("oooooooooooo");
 			Role role=user.getRole();
 			System.out.println(role.getId());
+			System.out.println(role.getFeatures().size());
+			Set<Feature> features=role.getFeatures();
+			Feature ff=new Feature("Delete contact");
+			//features.add(ff);
+//			
+			System.out.println(features.contains(ff));
+//			String hql = "FROM role_feature E where E.role_id=2 and E.feature_id='Delete Contact'";
+//			Query query = session.createQuery(hql);
+//			List results =  query.list();
+//			System.out.println(results.size());
+			
 			tx.commit();
 
 		}

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -23,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 
 import JavaClass.Contact;
 import JavaClass.Event;
+import JavaClass.Feature;
 import JavaClass.User;
 
 
@@ -53,22 +55,66 @@ public class ContactManager {
 
 
 	//delete one Contact
-	public boolean deleteOneContact(int Contactid) throws SQLException{
-
-		boolean is_exist=false;
+	public String deleteOneContact(int Contactid,String ip,Map<String, User> userDB) throws SQLException{
+		
+		boolean is_allow=false;
+		boolean is_guest=true;
+		String DeleteContactState = null;
+		User user = null;
+		User finaluser = null;
 		Session session = factory.openSession();
 		Transaction tx = null;
 		Contact contact;
 		try{
 			tx = session.beginTransaction();
-			contact=new Contact();
-			contact=session.get(Contact.class, Contactid);
+			
+			for(Map.Entry<String,User> me : userDB.entrySet()){
+				if(me.getKey().equals(ip)){
+					is_guest=false;
+					user=me.getValue();
+					finaluser=session.get(User.class,user.getUsername());
+					Set<Feature> features=finaluser.getRole().getFeatures();
+					Feature ff=new Feature("Delete contact");
+					if(features.contains(ff)){
+						System.out.println(features.contains(ff));
+						is_allow=true;
+					}
+					break;
+				}
+			}
+			
+			if(is_allow){
+				contact=new Contact();
+				contact=session.get(Contact.class, Contactid);
 
-			if(	contact!=null){
+				if(	contact!=null){
+					session.delete(contact); 
+					System.out.println("successfully deleted");
+					DeleteContactState="successfully deleted";
+				}
+				else{
+					DeleteContactState="The contact does not exist";
+				}
 
-				session.delete(contact); 
-				is_exist=true;
-				System.out.println("successfully deleted");
+				Date date=new Date();
+				Event ee=new Event(finaluser,"successful deleting a contact", date);
+				session.save(ee);
+			}
+			
+			else{
+				
+				DeleteContactState="Not allow";
+				if(is_guest){
+					User userguest=session.get(User.class,"guest");
+					Date date=new Date();
+					Event ee=new Event(userguest,"illegal attempt deleting a contact", date);
+					session.save(ee);
+				}
+				else{
+					Date date=new Date();
+					Event ee=new Event(finaluser,"illegal attempt deleting a contact", date);
+					session.save(ee);
+				}
 			}
 			tx.commit();
 		}catch (HibernateException e) {
@@ -77,7 +123,7 @@ public class ContactManager {
 		}finally {
 			session.close(); 
 		}
-		return is_exist;
+		return DeleteContactState;
 	}
 
 
@@ -175,6 +221,7 @@ public class ContactManager {
 				if(me.getKey().equals(ip)){
 					user=me.getValue();
 					is_allow=true;
+					break;
 				}
 			}
 			if(is_allow){
@@ -184,15 +231,15 @@ public class ContactManager {
 				Date date=new Date();
 				Event ee=new Event(userMember,"successful adding a contact", date);
 				session.save(ee);
-				tx.commit();
+
 			}
 			else{
 				User userguest=session.get(User.class,"guest");
 				Date date=new Date();
 				Event ee=new Event(userguest,"illegal attempt adding a contact", date);
 				session.save(ee);
-
 			}
+			tx.commit();
 
 		}catch (HibernateException e) {
 			if (tx!=null) tx.rollback();

@@ -57,7 +57,7 @@ public class RESTContact{
 			log.error(result);
 			return Response.status(401).entity(result).build();
 		}
-		
+
 	}
 
 
@@ -76,18 +76,25 @@ public class RESTContact{
 	//Delete one contact
 	@DELETE
 	@Path("/{id}")
-	public Response deleteOneTickets(@PathParam("id") String id) throws SQLException{
+	public Response deleteOneTickets(@PathParam("id") String id,@Context HttpServletRequest request) throws SQLException{
 		ContactManager TT=new ContactManager();
-		String result;
-		if(TT.deleteOneContact(Integer.parseInt(id))){
+		String ip = request.getRemoteAddr();
+		String result=TT.deleteOneContact(Integer.parseInt(id),ip,userDB);
+		if(result.equals("successfully deleted")){
 			result = "The contact with id "+id+" deleted successfully.";
-			System.out.println(result);
+			log.error(result);
+			return Response.status(200).entity(result).build();
 		}
-		else{
+		else if(result.equals("The contact does not exist")){
 			result = "The contact with id "+id+" which you want to delete does not exist.";
-			System.out.println(result);
+			log.error(result);
+			return Response.status(200).entity(result).build();
 		}
-		return Response.status(200).entity(result).build();
+		else {
+			result="You are not allowed to delete a contact";
+			log.error(result);
+			return Response.status(401).entity(result).build();
+		}
 	}
 
 	//show one contact
@@ -108,11 +115,11 @@ public class RESTContact{
 		ContactManager TT=new ContactManager();
 		String result;
 		if(TT.updateOneContact(t)){
-			result = "The contact with id "+id+" updated successfully.";
+			result = "The contact with id "+id+" edited successfully.";
 			System.out.println(result);
 		}
 		else{
-			result = "The contact with id "+id+" which you want to update does'nt exist.";
+			result = "The contact with id "+id+" which you want to edit does not exist.";
 			System.out.println(result);
 		}
 		return Response.status(200).entity(result).build();	

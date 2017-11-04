@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
+
 @Entity
 @Table(name="feature")
 public class Feature {
@@ -27,6 +29,21 @@ public class Feature {
 		this.namefeature=namefeature;
 
 	}
+	
+	public int hashCode(){
+		int result = 0; 
+		result = 31*result + (namefeature !=null ? namefeature.hashCode() : 0);
+		return result;
+	} 
+	
+	public boolean equals(Object other){ 
+		if(this == other) return true;
+		if(other == null || (this.getClass() != other.getClass())){
+			return false;
+			}
+		Feature guest = (Feature) other; 
+		return (this.namefeature != null && namefeature.equals(guest.namefeature));
+		}
 
 
 }
