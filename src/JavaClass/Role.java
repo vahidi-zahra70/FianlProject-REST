@@ -6,11 +6,17 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 
 @Entity
@@ -38,10 +44,11 @@ public class Role {
 	public void setPosition(String position) {
 		this.position = position;
 	}
-	
-	@ManyToMany(cascade=CascadeType.ALL)
+	//@NotFound( action=NotFoundAction.IGNORE)
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name="role_feature", joinColumns={ @JoinColumn(name="role_id")},
 	inverseJoinColumns={ @JoinColumn(name="feature_id")})
+	
 	private Set<Feature> features=new HashSet<Feature>();
 	public Set<Feature> getFeatures() {
 		return features;

@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,22 +41,13 @@ public  class User {
 	}
 
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH,CascadeType.DETACH})  
 	private Role role;
 	public Role getRole() {
 		return role;
 	}
 	public void setRole(Role role) {
 		this.role = role;
-	}
-
-	@OneToMany(mappedBy = "user") 
-	private Set<Event> events = new HashSet<Event>(); 
-	public Set<Event> getEvents() {
-		return events;
-	}
-	public void setEvents(Set<Event> events) {
-		this.events = events;
 	}
 
 	public User(String username,String password, Role role){

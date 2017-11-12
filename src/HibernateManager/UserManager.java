@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -18,9 +19,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import JavaClass.Contact;
 import JavaClass.Event;
 import JavaClass.Role;
 import JavaClass.User;
+
 
 
 
@@ -43,6 +46,187 @@ public class UserManager {
 	}
 
 	}
+	
+	//Show all Users
+	public ArrayList<User> showAllUsers(String ip,Map<String, User> userDB) throws SQLException{
+		boolean is_exist=false;
+		User user = null;
+		Session session = factory.openSession();
+		Transaction tx = null;
+		ArrayList<User> users=new ArrayList<User>();
+		try{
+			tx = session.beginTransaction();
+//			for(Map.Entry<String,User> me : userDB.entrySet()){
+//				if(me.getKey().equals(ip)){
+//					user=me.getValue();
+//					is_exist=true;
+//				}
+//			}
+//			if(is_exist){
+//				User userMember=session.get(User.class,user.getUsername());
+//				Date date=new Date();
+//				Event ee=new Event(userMember,"show all contacts", date);
+//				session.save(ee);
+//			}
+//			else{
+//				User userguest=session.get(User.class,"guest");
+//				Date date=new Date();
+//				Event ee=new Event(userguest,"show all contacts", date);
+//				session.save(ee);
+//			}
+			
+			
+			String hql = "FROM User";
+			System.out.println("kkkkkkkkkkkk");
+					Query query = session.createQuery(hql);
+					List results =  query.list();
+					Iterator itr = results.iterator();
+					while (itr.hasNext()) {
+						User emp = (User) itr.next();
+						users.add(emp);
+					}
+			System.out.println("jjjjjjjjj");
+//			Criteria criteria = session.createCriteria(User.class);
+//			System.out.println("mmmmmmmmmmmm");
+//			List users2 = criteria.list();
+//			Iterator itr = users2.iterator();
+//			while (itr.hasNext()) {
+//				User emp = (User) itr.next();
+//				users.add(emp);
+//			}
+			tx.commit();
+		}catch (HibernateException e) {
+			if (tx!=null) tx.rollback();
+			e.printStackTrace(); 
+		}finally {
+			session.close(); 
+		}
+		return users;
+	}
+	
+	
+	//Show all Events
+	public ArrayList<Event> showAllEvents(String ip,Map<String, User> userDB) throws SQLException{
+		boolean is_exist=false;
+		User user = null;
+		Session session = factory.openSession();
+		Transaction tx = null;
+		ArrayList<Event> events=new ArrayList<Event>();
+		try{
+			tx = session.beginTransaction();
+//			for(Map.Entry<String,User> me : userDB.entrySet()){
+//				if(me.getKey().equals(ip)){
+//					user=me.getValue();
+//					is_exist=true;
+//				}
+//			}
+//			if(is_exist){
+//				User userMember=session.get(User.class,user.getUsername());
+//				Date date=new Date();
+//				Event ee=new Event(userMember,"show all contacts", date);
+//				session.save(ee);
+//			}
+//			else{
+//				User userguest=session.get(User.class,"guest");
+//				Date date=new Date();
+//				Event ee=new Event(userguest,"show all contacts", date);
+//				session.save(ee);
+//			}
+			
+			
+//			String hql = "FROM Event";
+//			System.out.println("kkkkkkkkkkkk");
+//					Query query = session.createQuery(hql);
+//					List results =  query.list();
+//					Iterator itr = results.iterator();
+//					while (itr.hasNext()) {
+//						User emp = (User) itr.next();
+//						users.add(emp);
+//					}
+			System.out.println("lllllllllllllll");
+			Criteria criteria = session.createCriteria(Event.class);
+			System.out.println("mmmmmmmmmmmmmm");
+			List events2 = criteria.list();
+			Iterator itr = events2.iterator();
+			while (itr.hasNext()) {
+				Event emp = (Event) itr.next();
+				events.add(emp);
+			}
+			tx.commit();
+		}catch (HibernateException e) {
+			if (tx!=null) tx.rollback();
+			e.printStackTrace(); 
+		}finally {
+			session.close(); 
+		}
+		return events;
+	}
+	
+	
+	
+	//Show all Events//based especial dates
+	public ArrayList<Event> showAllEventsDate(String date1,String date2,String ip,Map<String, User> userDB) throws SQLException{
+		boolean is_exist=false;
+		User user = null;
+		Session session = factory.openSession();
+		Transaction tx = null;
+		ArrayList<Event> events=new ArrayList<Event>();
+		try{
+			tx = session.beginTransaction();
+//			for(Map.Entry<String,User> me : userDB.entrySet()){
+//				if(me.getKey().equals(ip)){
+//					user=me.getValue();
+//					is_exist=true;
+//				}
+//			}
+//			if(is_exist){
+//				User userMember=session.get(User.class,user.getUsername());
+//				Date date=new Date();
+//				Event ee=new Event(userMember,"show all contacts", date);
+//				session.save(ee);
+//			}
+//			else{
+//				User userguest=session.get(User.class,"guest");
+//				Date date=new Date();
+//				Event ee=new Event(userguest,"show all contacts", date);
+//				session.save(ee);
+//			}
+			
+			
+//			String hql = "FROM Event";
+//			System.out.println("kkkkkkkkkkkk");
+//					Query query = session.createQuery(hql);
+//					List results =  query.list();
+//					Iterator itr = results.iterator();
+//					while (itr.hasNext()) {
+//						User emp = (User) itr.next();
+//						users.add(emp);
+//					}
+			System.out.println(date1);
+			System.out.println(date2);
+			String hql = "FROM  Event E 	WHERE E.date >= '" +date1+ "' AND E.date< '"+date2+"'";
+			Query query = session.createQuery(hql);
+			List results =  query.list();
+			Iterator itr = results.iterator();
+			System.out.println(results.size());
+			
+			while (itr.hasNext()) {
+				Event emp = (Event) itr.next();
+				events.add(emp);
+				
+				
+			}
+			tx.commit();
+		}catch (HibernateException e) {
+			if (tx!=null) tx.rollback();
+			e.printStackTrace(); 
+		}finally {
+			session.close(); 
+		}
+		return events;
+	}
+	
+	
 
 	//inserting a new User
 	public boolean insertUser(User CC){
@@ -121,7 +305,7 @@ public class UserManager {
 
 
 	}
-	//Changing the user's roles
+//	//Changing the user's roles
 	public boolean changeRole(User t) throws SQLException{
 
 		boolean is_exist=false;
@@ -135,9 +319,13 @@ public class UserManager {
 			user=session.get(User.class, username);
 
 			if(	user!=null){
+				System.out.println("ppppppppp");
 				user.setRole(t.getRole());
+				System.out.println(t.getRole().getId());
+				session.update(user);
 				is_exist=true;
 				System.out.println("successfully update"); 
+				
 
 			}
 			tx.commit();
@@ -150,6 +338,44 @@ public class UserManager {
 		return is_exist;
 	}
 
+	
+	//Changing the user's roles
+//		public boolean changeRole(String username,String role) throws SQLException{
+//
+//			boolean is_exist=false;
+//			Session session = factory.openSession();
+//			Transaction tx = null;
+//			User user;
+//			Role changerole;
+//			try{
+//				tx = session.beginTransaction();
+//				user=new User();
+//				int roleNumber = 0;
+//				user=session.get(User.class, username);
+//				if(role.equals("member")){
+//					roleNumber=3;
+//				}
+//				else if(role.equals("manager")){
+//					roleNumber=2;
+//					
+//				}
+//				changerole=session.get(Role.class, roleNumber);
+//				if(	user!=null){
+//					user.setRole(changerole);
+//					session.update(user);
+//					is_exist=true;
+//					System.out.println("successfully update"); 
+//
+//				}
+//				tx.commit();
+//			}catch (HibernateException e) {
+//				if (tx!=null) tx.rollback();
+//				e.printStackTrace(); 
+//			}finally {
+//				session.close(); 
+//			}
+//			return is_exist;
+//		}
 
 	//delete one user
 	public boolean deleteOneUser(String username) throws SQLException{
@@ -216,169 +442,6 @@ public class UserManager {
 	}
 
 
-	//	//show all Drugs
-	//	public Object [][] ShowDrogs( ) throws SQLException {
-	//		Object[][] data = null;
-	//		Session session = factory.openSession();
-	//		Transaction tx = null;
-	//		ArrayList<Drog> drogs=new ArrayList<Drog>();
-	//		try{
-	//			tx = session.beginTransaction();
-	//			Criteria criteria = session.createCriteria(Drog.class);
-	//			List tickets2 = criteria.list();
-	//			Iterator itr = tickets2.iterator();
-	//			while (itr.hasNext()) {
-	//				Drog emp = (Drog) itr.next();
-	//				drogs.add(emp);
-	//			}
-	//			tx.commit();
-	//
-	//			data =new Object[drogs.size()][4];
-	//			for(int i=0;i<drogs.size();i++){
-	//				data[i][0]=drogs.get(i).getId();
-	//				data[i][1]=drogs.get(i).getName();
-	//				data[i][2]=drogs.get(i).getInventory();
-	//				data[i][3]=drogs.get(i).getPrice();
-	//
-	//			}
-	//
-	//		}catch (HibernateException e) {
-	//			if (tx!=null) tx.rollback();
-	//			e.printStackTrace(); 
-	//		}finally {
-	//			session.close(); 
-	//		}
-	//		return data;
-	//	}
-	//
-	//	//show all Critical Drugs
-	//	public Object [][] ShowCriticalDrogs( ) throws SQLException {
-	//		Object[][] data = null;
-	//		Session session = factory.openSession();
-	//		Transaction tx = null;
-	//		ArrayList<Drog> drogs=new ArrayList<Drog>();
-	//		try{
-	//			tx = session.beginTransaction();
-	//			String hql = "FROM Drog E WHERE E.inventory < 10";
-	//			Query query = session.createQuery(hql);
-	//			List results =  query.list();
-	//			Iterator itr = results.iterator();
-	//			while (itr.hasNext()) {
-	//				Drog emp = (Drog) itr.next();
-	//				drogs.add(emp);
-	//				System.out.println(emp.getName());
-	//			}
-	//			tx.commit();
-	//
-	//			data =new Object[drogs.size()][4];
-	//			for(int i=0;i<drogs.size();i++){
-	//				data[i][0]=drogs.get(i).getId();
-	//				data[i][1]=drogs.get(i).getName();
-	//				data[i][2]=drogs.get(i).getInventory();
-	//				data[i][3]=drogs.get(i).getPrice();
-	//
-	//			}
-	//
-	//		}catch (HibernateException e) {
-	//			if (tx!=null) tx.rollback();
-	//			e.printStackTrace(); 
-	//		}finally {
-	//			session.close(); 
-	//		}
-	//		return data;
-	//	}	
-	//	//delete one drug
-	//	public boolean deleteOneInsurance(int id) throws SQLException{
-	//
-	//		boolean is_exist=false;
-	//		Session session = factory.openSession();
-	//		Transaction tx = null;
-	//		Insurance ticket;
-	//		try{
-	//			tx = session.beginTransaction();
-	//			ticket=new Insurance();
-	//			ticket=	session.get(Insurance.class, id);
-	//
-	//			if(	ticket!=null){
-	//
-	//				session.delete(ticket); 
-	//				is_exist=true;
-	//				System.out.println("successfully deleted");
-	//			}
-	//			tx.commit();
-	//		}catch (HibernateException e) {
-	//			if (tx!=null) tx.rollback();
-	//			e.printStackTrace(); 
-	//		}finally {
-	//			session.close(); 
-	//		}
-	//		return is_exist;
-	//	}
-	//
-	//	//update the price for a  Drug
-	//	public boolean updateOneDrug(Drog t) throws SQLException{
-	//
-	//		boolean is_exist=false;
-	//		Session session = factory.openSession();
-	//		Transaction tx = null;
-	//		Drog insurance;
-	//		try{
-	//			tx = session.beginTransaction();
-	//			insurance=new Drog();
-	//			int id=t.getId();
-	//			insurance=	session.get(Drog.class, id);
-	//
-	//			if(	insurance!=null){
-	//				insurance.setPrice(t.getPrice());
-	//				session.update(insurance);
-	//				is_exist=true;
-	//				System.out.println("successfully update"); 
-	//
-	//			}
-	//			tx.commit();
-	//		}catch (HibernateException e) {
-	//			if (tx!=null) tx.rollback();
-	//			e.printStackTrace(); 
-	//		}finally {
-	//			session.close(); 
-	//		}
-	//		return is_exist;
-	//	}
-	//
-	//
-	//	//update the inventory for a  Drug
-	//	public boolean updateInventoryDrug(Integer DrugID,int quantity) throws SQLException{
-	//
-	//		boolean is_exist=false;
-	//		Session session = factory.openSession();
-	//		Transaction tx = null;
-	//		Drog insurance;
-	//		try{
-	//			tx = session.beginTransaction();
-	//			insurance=new Drog();
-	//
-	//			insurance=	session.get(Drog.class, DrugID);
-	//
-	//			if(	insurance!=null){
-	//				if(insurance.getInventory()-quantity>=0){
-	//					insurance.setInventory(insurance.getInventory()-quantity);
-	//					session.update(insurance);
-	//					is_exist=true;
-	//					System.out.println("successfully update"); 
-	//				}
-	//			}
-	//			tx.commit();
-	//		}catch (HibernateException e) {
-	//			if (tx!=null) tx.rollback();
-	//			e.printStackTrace(); 
-	//		}finally {
-	//			session.close(); 
-	//		}
-	//		return is_exist;
-	//	}
-	//
-	//
-	//
-	//
+
 
 }

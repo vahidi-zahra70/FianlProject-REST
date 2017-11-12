@@ -56,7 +56,7 @@ public class ContactManager {
 
 	//delete one Contact
 	public String deleteOneContact(int Contactid,String ip,Map<String, User> userDB) throws SQLException{
-		
+
 		boolean is_allow=false;
 		boolean is_guest=true;
 		String DeleteContactState = null;
@@ -67,7 +67,7 @@ public class ContactManager {
 		Contact contact;
 		try{
 			tx = session.beginTransaction();
-			
+
 			for(Map.Entry<String,User> me : userDB.entrySet()){
 				if(me.getKey().equals(ip)){
 					is_guest=false;
@@ -76,13 +76,12 @@ public class ContactManager {
 					Set<Feature> features=finaluser.getRole().getFeatures();
 					Feature ff=new Feature("Delete contact");
 					if(features.contains(ff)){
-						System.out.println(features.contains(ff));
 						is_allow=true;
 					}
 					break;
 				}
 			}
-			
+
 			if(is_allow){
 				contact=new Contact();
 				contact=session.get(Contact.class, Contactid);
@@ -100,9 +99,9 @@ public class ContactManager {
 				Event ee=new Event(finaluser,"successful deleting a contact", date);
 				session.save(ee);
 			}
-			
+
 			else{
-				
+
 				DeleteContactState="Not allow";
 				if(is_guest){
 					User userguest=session.get(User.class,"guest");
@@ -128,29 +127,76 @@ public class ContactManager {
 
 
 	//update one Contact
-	public boolean updateOneContact(Contact t) throws SQLException{
+	public String updateOneContact(Contact t,String ip,Map<String, User> userDB) throws SQLException{
 
-		boolean is_exist=false;
+		boolean is_allow=false;
+		boolean is_guest=true;
+		String UpdateContactState = null;
+		User user = null;
+		User finaluser = null;
 		Session session = factory.openSession();
 		Transaction tx = null;
 		Contact contact;
 		try{
 			tx = session.beginTransaction();
-			contact=new Contact();
-			int id=t.getId();
-			contact=	session.get(Contact.class, id);
 
-			if(	contact!=null){
+			for(Map.Entry<String,User> me : userDB.entrySet()){
+				if(me.getKey().equals(ip)){
+					is_guest=false;
+					user=me.getValue();
+					finaluser=session.get(User.class,user.getUsername());
+					Set<Feature> features=finaluser.getRole().getFeatures();
+					Feature ff=new Feature("Update contact");
+					if(features.contains(ff)){
+						System.out.println(features.contains(ff));
+						is_allow=true;
+					}
+					break;
+				}
+			}
 
-				contact.setName(t.getName());
-				contact.setFamily(t.getFamily());
-				contact.setHomephone(t.getHomephone());
-				contact.setCellphone(t.getCellphone());
-				contact.setEmail(t.getEmail());
-				session.update(contact);
-				is_exist=true;
-				System.out.println("successfully update"); 
 
+
+			if(is_allow){
+				contact=new Contact();
+				int id=t.getId();
+				contact=session.get(Contact.class, id);
+
+				if(	contact!=null){
+
+					contact.setName(t.getName());
+					contact.setFamily(t.getFamily());
+					contact.setHomephone(t.getHomephone());
+					contact.setCellphone(t.getCellphone());
+					contact.setEmail(t.getEmail());
+					session.update(contact);
+
+					System.out.println("successfully update"); 
+					UpdateContactState="successfully update";
+				}
+				else{
+					System.out.println("The contact does not exist"); 
+					UpdateContactState="The contact does not exist";
+				}
+				Date date=new Date();
+				Event ee=new Event(finaluser,"successful editing a contact", date);
+				session.save(ee);
+			}
+			
+			else{
+
+				UpdateContactState="Not allow";
+				if(is_guest){
+					User userguest=session.get(User.class,"guest");
+					Date date=new Date();
+					Event ee=new Event(userguest,"illegal attempt editing a contact", date);
+					session.save(ee);
+				}
+				else{
+					Date date=new Date();
+					Event ee=new Event(finaluser,"illegal attempt editing a contact", date);
+					session.save(ee);
+				}
 			}
 			tx.commit();
 		}catch (HibernateException e) {
@@ -159,7 +205,7 @@ public class ContactManager {
 		}finally {
 			session.close(); 
 		}
-		return is_exist;
+		return UpdateContactState;
 	}
 
 
@@ -285,6 +331,8 @@ public class ContactManager {
 			Query query = session.createQuery(hql);
 			List results =  query.list();
 			Iterator itr = results.iterator();
+			System.out.println(results.size());
+			System.out.println("llllllllllll");
 			while (itr.hasNext()) {
 				Contact emp = (Contact) itr.next();
 				contacts.add(emp);

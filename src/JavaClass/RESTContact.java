@@ -68,7 +68,7 @@ public class RESTContact{
 	public  ArrayList<Contact>   showAllContacts( @Context HttpServletRequest request) throws SQLException{
 		String ip = request.getRemoteAddr();
 		ContactManager TT=new ContactManager();
-		System.out.println("ccccccccccccc");
+		log.error("See All the Contacts");
 		return TT.showAllContacts( ip,userDB);
 	}
 
@@ -110,19 +110,26 @@ public class RESTContact{
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response  UpdateTicket(@PathParam("id") String id,Contact t) throws NumberFormatException, SQLException{
+	public Response  UpdateTicket(@PathParam("id") String id,Contact t,@Context HttpServletRequest request) throws NumberFormatException, SQLException{
+		String ip = request.getRemoteAddr();
 		t.setId(Integer.parseInt(id));
 		ContactManager TT=new ContactManager();
-		String result;
-		if(TT.updateOneContact(t)){
+		String result=TT.updateOneContact(t,ip,userDB);
+		if(result.equals("successfully update")){
 			result = "The contact with id "+id+" edited successfully.";
-			System.out.println(result);
+			log.error(result);
+			return Response.status(200).entity(result).build();	
 		}
-		else{
+		else if(result.equals("The contact does not exist")){
 			result = "The contact with id "+id+" which you want to edit does not exist.";
-			System.out.println(result);
+			log.error(result);
+			return Response.status(200).entity(result).build();	
 		}
-		return Response.status(200).entity(result).build();	
+		else {
+			result="You are not allowed to edit a contact";
+			log.error(result);
+			return Response.status(401).entity(result).build();
+		}	
 	}
 
 	//search a contact

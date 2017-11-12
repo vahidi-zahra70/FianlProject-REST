@@ -1,22 +1,34 @@
 //The root URL for the RESTful services
-//$('#URL').val();
-var rootURL = "http://localhost:8088/ProjectFinal/prj";
-//var rootURL = $('#URL').val()+"/ProjectFinal/prj";
+//var rootURL = "http://localhost:8088/ProjectFinal/prj";
+var rootURL = localStorage.getItem('rootURL');
+console.log(rootURL);
 
 $('#btnshow').click(function() {
 	window.location.href=("http://localhost:8088/ProjectFinal/SeeContactGuestMember.html");
 });
 
-$('#btnshow2').click(function() {
-	SeeAllContactManager()
-});
 
-$('#btnshow3').click(function() {
-	SeeAllContactGuestMember()
+//See events
+$('#btnshowEvent').click(function() {
+	var startDate=$("#StartYear").val()+"-"+$("#StartMonth").val()+"-"+$("#Startday").val();
+	var finishDate=$("#FinishYear").val()+"-"+$("#FinishMonth").val()+"-"+$("#Finishday").val();
+	console.log(startDate);
+	console.log(finishDate);
+	SeeAllEventsManagerDate(startDate,finishDate)
 });
 
 $("#login").submit(function(){
 	validateUser()
+	return false;
+});
+
+//Search Contacts
+$('#formSearchContact').submit(function() {
+	var nameSearch=$("#nameSearch").val();
+	var cellPhoneSearch=$("#cellPhoneSearch").val();
+	console.log(nameSearch);
+	console.log(cellPhoneSearch);
+	SearchContacts(nameSearch,cellPhoneSearch);
 	return false;
 });
 
@@ -43,6 +55,11 @@ $("#formAddContact").submit(function(){
 	return false;
 });
 
+//Editing a user/for Manager
+$("#formEditUser").submit(function(){
+	editUser()
+	return false;
+});
 
 //for manager
 $("#addContact").click(function(){
@@ -79,26 +96,14 @@ $("#editContact").click(function(){
 
 
 
-function find() {
-	console.log('addWine');
-	$.ajax({
-		type: 'GET',
-		url: rootURL + '/users/va',
-		success: function(){
-			window.location.href=("http://localhost:8088/ProjectFinal/UserHomePage.html");
-
-
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-			alert('addWine error: ' + textStatus);
-		}
-	});
-}
-
-
-
 //validate a user
 function validateUser() {
+	
+	var x=$('#URL').val();
+	
+	localStorage.setItem('rootURL',$('#URL').val());
+	var rootURL = localStorage.getItem('rootURL');
+	console.log(rootURL);
 	console.log('validate');
 	$.ajax({
 		type: 'POST',
@@ -129,6 +134,13 @@ function validateUser() {
 			$('#name').val("");
 			$('#pass').val("");
 			$('#URL').val("");
+			}
+			else if(responseText=="OK 1"){
+				console.log(' entering a Senior Manager');
+				window.location.href=("http://localhost:8088/ProjectFinal/SeniorManagerHomePage.html");
+				$('#name').val("");
+				$('#pass').val("");
+				$('#URL').val("");
 		}
 	})
 	.fail( function (jqXHR, status, error) {
@@ -194,7 +206,7 @@ function addContact() {
 
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			alert(jqXHR.status);
+			alert(jqXHR.status+ " "+jqXHR.responseText);
 		}
 	});
 }
@@ -223,7 +235,7 @@ function editContact() {
 
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			alert(jqXHR.status);
+			alert(jqXHR.status+" "+jqXHR.responseText);
 		}
 	});
 }
@@ -247,6 +259,24 @@ function SeeAllContactManager() {
 	});
 };
 
+//See All users/ Manager
+function SeeAllUsersManager() {
+	console.log('seeAllUsers');
+	$.ajax({
+		type: 'GET',
+		url: rootURL+ '/users',
+		dataType: "json", // data type of response
+		success: function(data){
+			$("#AllUsersSeniorManager  td").parent().remove();
+			var trHTML = '';
+			$.each(data, function (i, item) {
+				trHTML += '<tr><td>' + item.username + '</td><td>' + item.role.id+ '</td><td>'+ item.role.position +'</td><td><a  href="#" onclick="DeleteUser(\''+item.username+'\');">'+"Delete"+'</a></td></tr>';
+			});
+			$('#AllUsersSeniorManager').append(trHTML);
+		}
+	});
+};
+
 //See All contacts/ Guest and Member
 function SeeAllContactGuestMember() {
 	console.log('seeAllContacts');
@@ -265,6 +295,62 @@ function SeeAllContactGuestMember() {
 	});
 };
 
+//Search the contacts
+function SearchContacts(nameSearch,cellPhoneSearch) {
+	console.log('searchContact');
+	$.ajax({
+		type: 'GET',
+		url: rootURL+ '/contacts/'+nameSearch+'/'+ cellPhoneSearch,
+		dataType: "json", // data type of response
+		success: function(data){
+			$("#SearchAllContacts  td").parent().remove();
+			var trHTML = '';
+			$.each(data, function (i, item) {
+				trHTML += '<tr><td>' + item.id + '</td><td>' + item.name + '</td><td>' + item.family + '</td><td>'+ item.homephone + '</td><td>'+ item.cellphone + '</td><td>'+ item.email +'</td></tr>';
+			});
+			$('#SearchAllContacts').append(trHTML);
+		}
+	});
+};
+
+
+//See All events/ Manager
+function SeeAllEventsManager() {
+	console.log('seeAllEvents');
+	$.ajax({
+		type: 'GET',
+		url: rootURL+ '/users/event',
+		dataType: "json", // data type of response
+		success: function(data){
+			$("#AllEventsManager  td").parent().remove();
+			var trHTML = '';
+			$.each(data, function (i, item) {
+				trHTML += '<tr><td>' + item.id + '</td><td>' + item.date+ '</td><td>'+ item.description +'</td><td>'+item.user.username+'</td></tr>';
+			});
+			$('#AllEventsManager').append(trHTML);
+		}
+	});
+};
+
+//See All events Based on Date/ Manager
+function SeeAllEventsManagerDate(startDate,finishDate) {
+	console.log('seeAllEventsDate');
+	console.log(startDate);
+	console.log(finishDate);
+	$.ajax({
+		type: 'GET',
+		url: rootURL+ '/users/'+startDate+'/'+finishDate,
+		dataType: "json", // data type of response
+		success: function(data){
+			$("#AllEventsManager  td").parent().remove();
+			var trHTML = '';
+			$.each(data, function (i, item) {
+				trHTML += '<tr><td>' + item.id + '</td><td>' + item.date+ '</td><td>'+ item.description +'</td><td>'+item.user.username+'</td></tr>';
+			});
+			$('#AllEventsManager').append(trHTML);
+		}
+	});
+};
 
 //Delete a contact
 function DeleteContact(id) {
@@ -275,13 +361,55 @@ function DeleteContact(id) {
 		cache: false,
 		url: rootURL + '/contacts/' + id,
 		success: function(data, textStatus, jqXHR){
-			SeeAllContactManager()();
+			SeeAllContactManager();
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			alert(jqXHR.status);
+			alert(jqXHR.status+" "+jqXHR.responseText);
 		}
 	});
 
+}
+
+
+//Delete a user
+function DeleteUser(x) {
+	console.log('deleteUser');
+	$.ajax({
+		type: 'DELETE',
+		async: false,
+		cache: false,
+		url: rootURL + '/users/' + x,
+		success: function(data, textStatus, jqXHR){
+			SeeAllUsersManager();
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			alert(jqXHR.status+" "+jqXHR.responseText);
+		}
+	});
+
+}
+
+
+
+//Edit a user
+function editUser() {
+	console.log('editUser');
+	$.ajax({
+		type: 'PUT',
+		contentType: 'application/json',
+		async: false,
+		cache: false,
+		url: rootURL + '/users/' +$('#nameUserEdit').val(),
+		data: formToJSONEditUser(),
+		success: function(responseText){
+			$("#EditUser").text(responseText);
+			$("#EditUser").css('color', 'blue');
+			$('#nameUserEdit').val("");
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			alert(jqXHR.status+" "+jqXHR.responseText);
+		}
+	});
 }
 //Helper function to serialize all the form fields into a JSON string
 
@@ -292,6 +420,7 @@ function formToJSON() {
 		"password": $('#pass').val()
 	});
 }
+
 //For registering
 function formToJsonRegister() {
 	return JSON.stringify({
@@ -311,9 +440,25 @@ function formToJsonContact() {
 	});
 }
 
-function formToJSON2() {
-	var x="rrrrrrrrrrrrrrrr"
-		return x
+//For editing a user
+function formToJSONEditUser() {
+	var RoleID;
+	if($('#changeRole').val()=="member"){
+		RoleID=3;
+	}
+	else if($('#changeRole').val()=="manager"){
+		RoleID=2;
+	}
+	console.log(RoleID);
+	return JSON.stringify({
+		"username": $('#nameUserEdit').val(),
+		"role":
+        {
+           "id": RoleID
+           
+        }
 
-		;
+
+	});
 }
+

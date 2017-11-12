@@ -18,7 +18,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import HibernateManager.ContactManager;
-
+import HibernateManager.UserManager;
 
 import java.util.List;
 import java.util.Set;
@@ -50,105 +50,139 @@ public class Base {
 		tx = session.beginTransaction();
 
 
-		//		Feature f1=new Feature("See contact");
-		//		Feature f2=new Feature("Add contact");
-		//		Feature f3=new Feature("Delete contact");
-		//		Feature f4=new Feature("Update contact");
-		//		Feature f5=new Feature("Search contact");
-		//		Feature f6=new Feature("Delete User");
-		//		Feature f7=new Feature("Update User");
-		//		Feature f9=new Feature("See event");
-		//		
-		//		Set<Feature> featuresRole1=new HashSet<Feature>();
-		//		featuresRole1.add(f1);
-		//		featuresRole1.add(f2);
-		//		featuresRole1.add(f3);
-		//		featuresRole1.add(f4);
-		//		featuresRole1.add(f5);
-		//		featuresRole1.add(f6);
-		//		featuresRole1.add(f7);
-		//		featuresRole1.add(f9);
-		//		Role r1=new Role(1,"seniormanager",featuresRole1);
-		//
-		//		Set<Feature> featuresRole2=new HashSet<Feature>();
-		//		featuresRole2.add(f1);
-		//		featuresRole2.add(f2);
-		//		featuresRole2.add(f3);
-		//		featuresRole2.add(f4);
-		//		featuresRole2.add(f5);
-		//		featuresRole2.add(f9);
-		//		Role r2=new Role(2,"manager",featuresRole2);
-		//		
-		//		Set<Feature> featuresRole3=new HashSet<Feature>();
-		//		featuresRole3.add(f1);
-		//		featuresRole3.add(f2);
-		//		featuresRole3.add(f5);
-		//		Role r3=new Role(3,"member",featuresRole3);
-		//
-		//		Set<Feature> featuresRole4=new HashSet<Feature>();
-		//		featuresRole4.add(f1);
-		//		Role r4=new Role(4,"guest",featuresRole4);
-		//
-		//		
-		//
-		//		User u=new User("n.nasher",encrypt("12345"),r1);
-		//		User u1=new User("z.vahidi",encrypt("12346"),r2);
-		//		User u2=new User("a.aslani",encrypt("12347"),r3);
-		//		User u3=new User("m.ansari",encrypt("12348"),r3);
-		//		User u4=new User("f.amiri",encrypt("12349"),r3);
-		//		User u5=new User("guest",r4);
-		//		session.save(u);
-		//		session.save(u1);
-		//		session.save(u2);
-		//		session.save(u3);
-		//		session.save(u4);
-		//		session.save(u5);
-		//		Contact c1=new Contact("contact1","family1",2177075502L,9194895293L,"contact1@yahoo.com");
-		//		Contact c2=new Contact("contact2","family2",2188075502L,9194895693L,"contact2@yahoo.com");
-		//		session.save(c1);
-		//		session.save(c2);
-		//		Date date=new Date();
-		//		Event ee=new Event(u1,"kkkk", date);
-		//		session.save(ee);
-		//		tx.commit();
-		//		ContactManager TT=new ContactManager();
-		//		TT.searchContact("ali", 888);
-		//		ArrayList<Event> drogs=new ArrayList<Event>();
-		//		String hql = "FROM Event";
-		//		Query query = session.createQuery(hql);
-		//		List results =  query.list();
-		//		Iterator itr = results.iterator();
-		//		while (itr.hasNext()) {
-		//			Event emp = (Event) itr.next();
-		//			drogs.add(emp);
-		//			System.out.println(emp.getDescription());
-		//		}
-		//tx.commit();
+//				Feature f1=new Feature("See contact");
+//				Feature f2=new Feature("Add contact");
+//				Feature f3=new Feature("Delete contact");
+//				Feature f4=new Feature("Update contact");
+//				Feature f5=new Feature("Search contact");
+//				Feature f6=new Feature("Delete User");
+//				Feature f7=new Feature("Update User");
+//				Feature f9=new Feature("See event");
+//				
+//				Set<Feature> featuresRole1=new HashSet<Feature>();
+//				featuresRole1.add(f1);
+//				featuresRole1.add(f2);
+//				featuresRole1.add(f3);
+//				featuresRole1.add(f4);
+//				featuresRole1.add(f5);
+//				featuresRole1.add(f6);
+//				featuresRole1.add(f7);
+//				featuresRole1.add(f9);
+//				Role r1=new Role(1,"seniormanager",featuresRole1);
+//		
+//				Set<Feature> featuresRole2=new HashSet<Feature>();
+//				featuresRole2.add(f1);
+//				featuresRole2.add(f2);
+//				featuresRole2.add(f3);
+//				featuresRole2.add(f4);
+//				featuresRole2.add(f5);
+//				featuresRole2.add(f9);
+//				Role r2=new Role(2,"manager",featuresRole2);
+//				
+//				Set<Feature> featuresRole3=new HashSet<Feature>();
+//				featuresRole3.add(f1);
+//				featuresRole3.add(f2);
+//				featuresRole3.add(f5);
+//				Role r3=new Role(3,"member",featuresRole3);
+//		
+//				Set<Feature> featuresRole4=new HashSet<Feature>();
+//				featuresRole4.add(f1);
+//				Role r4=new Role(4,"guest",featuresRole4);
+//		
+//				
+//		
+//				User u=new User("n.nasher",encrypt("12345"),r1);
+//				User u1=new User("z.vahidi",encrypt("12346"),r2);
+//				User u2=new User("a.aslani",encrypt("12347"),r3);
+//				User u3=new User("m.ansari",encrypt("12348"),r3);
+//				User u4=new User("f.amiri",encrypt("12349"),r3);
+//				User u5=new User("guest",r4);
+//				session.save(u);
+//				session.save(u1);
+//				session.save(u2);
+//				session.save(u3);
+//				session.save(u4);
+//				session.save(u5);
+//				Contact c1=new Contact("contact1","family1",2177075502L,9194895293L,"contact1@yahoo.com");
+//				Contact c2=new Contact("contact2","family2",2188075502L,9194895693L,"contact2@yahoo.com");
+//				session.save(c1);
+//				session.save(c2);
+//				Date date=new Date();
+//				Event ee=new Event(u1,"kkkk", date);
+//				session.save(ee);
+//				
+//				
+//				//if your cascade is not all
+//				session.save(r1);
+//				session.save(r2);
+//				session.save(r3);
+//				session.save(r4);
+//				
+//				tx.commit();
+		
+		
+		UserManager UU=new UserManager();
+		UU.deleteOneUser("a.aslani");
+		tx.commit();
+		
+		
+		
+//				ContactManager TT=new ContactManager();
+//				TT.searchContact("ali", 888);
+//				ArrayList<Event> drogs=new ArrayList<Event>();
+//				String hql = "FROM Event";
+//				Query query = session.createQuery(hql);
+//				List results =  query.list();
+//				Iterator itr = results.iterator();
+//				while (itr.hasNext()) {
+//					Event emp = (Event) itr.next();
+//					drogs.add(emp);
+//					System.out.println(emp.getDescription());
+//				}
+//		tx.commit();
 
 
-		User user=session.get(User.class,"z.vahidi");
-		if(user!=null && user.getPassword().equals(encrypt("12346"))){
-			System.out.println("oooooooooooo");
-			Role role=user.getRole();
-			System.out.println(role.getId());
-			System.out.println(role.getFeatures().size());
-			Set<Feature> features=role.getFeatures();
-			Feature ff=new Feature("Delete contact");
-			//features.add(ff);
+////		User user=session.get(User.class,"z.vahidi");
+////		if(user!=null && user.getPassword().equals(encrypt("12346"))){
+////			System.out.println("oooooooooooo");
+////			Role role=user.getRole();
+////			System.out.println(role.getId());
+////			System.out.println(role.getFeatures().size());
+////			Set<Feature> features=role.getFeatures();
+////			Feature ff=new Feature("Delete contact");
+////			//features.add(ff);
+//////			
+////			System.out.println(features.contains(ff));
+////			String hql = "FROM role_feature E where E.role_id=2 and E.feature_id='Delete Contact'";
+////			Query query = session.createQuery(hql);
+////			List results =  query.list();
+////			System.out.println(results.size());
+//			UserManager UU=new UserManager();
+//			System.out.println(UU.showAllUsers().size());
 //			
-			System.out.println(features.contains(ff));
-//			String hql = "FROM role_feature E where E.role_id=2 and E.feature_id='Delete Contact'";
-//			Query query = session.createQuery(hql);
-//			List results =  query.list();
-//			System.out.println(results.size());
-			
-			tx.commit();
+//			tx.commit();
+		
+//		String date1="2017-11-01";
+//		String date2="2017-11-00";
+//		String hql = "FROM  Event E 	WHERE E.date >= '" +date1+ "' AND E.date< '"+date2+"'";
+//		ArrayList<Event> drogs=new ArrayList<Event>();	
+//		Query query = session.createQuery(hql);
+//		List results =  query.list();
+//		Iterator itr = results.iterator();
+//		System.out.println(results.size());
+//		double AvgSale=0;
+//		while (itr.hasNext()) {
+//			Event emp = (Event) itr.next();
+//			drogs.add(emp);
+//			System.out.println(emp.getDescription());
+//		}
+//		tx.commit();
 
 		}
 
 
 
 
-	}
+	
 
 }

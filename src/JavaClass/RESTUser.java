@@ -45,6 +45,16 @@ public class RESTUser{
 		RESTUser.userDB = userDB;
 	}
 
+	//show all users
+	@GET
+	@Produces( MediaType.APPLICATION_JSON)
+	public  ArrayList<User>   showAllUsers( @Context HttpServletRequest request) throws SQLException{
+		String ip = request.getRemoteAddr();
+		UserManager TT=new UserManager();
+		log.error("See All the Users");
+		return TT.showAllUsers( ip,userDB);
+	}
+
 	//validating a user
 	@Path("/validate")  
 	@POST
@@ -55,21 +65,19 @@ public class RESTUser{
 		int output=TT.validation_of_user(t);
 		if(output==-1){
 			result="not exist";
-			
 		}
 		else{
 			result="OK "+output;
 			String ip = request.getRemoteAddr();
 			userDB.put(ip, t);
-			
 		}
 		log.error(result);
-		
+
 		return Response.status(200).entity(result).build();
 	}
-	
-	
-	
+
+
+
 
 	//adding a new user
 	@Path("/adduser")  
@@ -107,11 +115,13 @@ public class RESTUser{
 	}
 
 
-	//update one user
+//	//update one user
 	@PUT
 	@Path("/{username}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response  UpdateTicket(@PathParam("username") String username,User t) throws NumberFormatException, SQLException{
+		System.out.println(t.getRole().getId());
+		System.out.println(t.getUsername());
 		t.setUsername(username);
 		UserManager TT=new UserManager();
 		String result;
@@ -125,30 +135,58 @@ public class RESTUser{
 		}
 		return Response.status(200).entity(result).build();	
 	}
+	
+	//update one user
+//		@PUT
+//		@Path("/{username}/{role}")
+//		public Response  UpdateTicket(@PathParam("username") String username,@PathParam("role") String role) throws NumberFormatException, SQLException{
+//			
+//			UserManager TT=new UserManager();
+//			String result;
+//			if(TT.changeRole(username,role)){
+//				result = "The user with username "+username+" updated successfully.";
+//				System.out.println(result);
+//			}
+//			else{
+//				result = "The user with username "+username+" which you want to update does'nt exist.";
+//				System.out.println(result);
+//			}
+//			return Response.status(200).entity(result).build();	
+//		}
 
+	//show all events based on date
+	@GET
+	@Path("/{date1}/{date2}")
+	@Produces( MediaType.APPLICATION_JSON)
+	public  ArrayList<Event> showAllEventsDate(@PathParam("date1") String date1,@PathParam("date2") String date2,@Context HttpServletRequest request ) throws SQLException{
+		String ip = request.getRemoteAddr();
+		UserManager TT=new UserManager();
+		log.error("See All the Events");
+		return TT.showAllEventsDate(date1,date2,ip, userDB);
+	}
 	
-	
-	///
-	//validating a user
-		@Path("/va")  
+	//show all events
 		@GET
-		//@Consumes(MediaType.APPLICATION_JSON)
-		public Response validateUser2(@Context HttpServletRequest request) throws SQLException {
-			String result="";
-			System.out.println("pppppppppp");
-//			
-			return Response.status(200).entity(result).build();
+		@Path("/event")
+		@Produces( MediaType.APPLICATION_JSON)
+		public  ArrayList<Event> showAllEvents(@Context HttpServletRequest request ) throws SQLException{
+			String ip = request.getRemoteAddr();
+			UserManager TT=new UserManager();
+			log.error("See All the Events");
+			return TT.showAllEvents(ip, userDB);
 		}
-		
-		@Path("/bb")  
-		@GET
-		//@Consumes(MediaType.APPLICATION_JSON)
-		public Response validateUser3(String t,@Context HttpServletRequest request) throws SQLException {
-			String result="ooooooo";
-			System.out.println("yyyyyyyyy");
-//			
-			return Response.status(200).entity(result).build();
-		}
+
+
+
+	//	@Path("/bb")  
+	//	@GET
+	//	//@Consumes(MediaType.APPLICATION_JSON)
+	//	public Response validateUser3(String t,@Context HttpServletRequest request) throws SQLException {
+	//		String result="ooooooo";
+	//		System.out.println("yyyyyyyyy");
+	//		//			
+	//		return Response.status(200).entity(result).build();
+	//	}
 
 }
 
